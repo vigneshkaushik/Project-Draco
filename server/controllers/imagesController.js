@@ -7,8 +7,9 @@ const openai = new OpenAI(process.env.OpenAI_API_KEY);
 const createImage = async (req, res) => {
   try {
     const image = await openai.images.generate({
-      model: "dall-e-3",
-      prompt: "A cute baby sea otter",
+      model: "dall-e-2",
+      prompt: req.body.prompt,
+      n: 3,
     });
     console.log(image.data);
     res.send(image.data);
