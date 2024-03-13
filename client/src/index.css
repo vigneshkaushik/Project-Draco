@@ -91,6 +91,10 @@ p {
   flex-grow: 1;
 }
 
+.extra-info{
+  text-align: center;
+}
+
 @media (max-width:556px){
   .image-section img{
     max-width: 100%;

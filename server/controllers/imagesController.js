@@ -1,7 +1,20 @@
 require("dotenv").config();
 const OpenAI = require("openai");
+const fs = require("fs");
+const multer = require("multer");
 
 const openai = new OpenAI(process.env.OpenAI_API_KEY);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploaded_images");
+  },
+  filename: (req, file, cb) => {
+    console.log("file", file);
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const upload = multer({ storage: storage }).single("file");
 
 // Function to create image
 const createImage = async (req, res) => {
@@ -21,5 +34,17 @@ const createImage = async (req, res) => {
   }
 };
 
+//Function to upload image
+const uploadImage = async (req, res) => {
+  upload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    }
+    console.log(req.file);
+  });
+};
+
 // Exporting the function
-module.exports = { createImage };
+module.exports = { createImage, uploadImage };
