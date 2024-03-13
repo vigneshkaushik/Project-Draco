@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { StateContext } from "../App";
 
-const ImageSection = ({ images, value }) => {
+const ImageSection = () => {
+  const { images, value } = useContext(StateContext);
+
   return (
     <section className="image-section">
       {images?.map((image, index) => (

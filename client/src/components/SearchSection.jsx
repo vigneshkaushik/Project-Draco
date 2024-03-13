@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { StateContext } from "../App";
+import UploadImage from "./UploadImage";
 
-const SearchSection = ({ setImages, setValue, value, setError, error }) => {
+const SearchSection = () => {
+  const { setImages, setValue, value, setError, error } =
+    useContext(StateContext);
+
   const surpriseOptions = [
     "A cutting-edge office tower with a facade featuring dynamic LED lighting and sustainable materials.",
     "A sleek, minimalist apartment building with floor-to-ceiling windows and terraces on each floor.",
@@ -68,6 +73,7 @@ const SearchSection = ({ setImages, setValue, value, setError, error }) => {
         />
         <button onClick={getImages}>Generate</button>
       </div>
+      <UploadImage />
       {error && <p>{error}</p>}
     </section>
   );
