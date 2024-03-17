@@ -2,14 +2,16 @@ import React, { useContext } from "react";
 import { StateContext } from "../App";
 
 const UploadImage = () => {
-  const { setUploadedImage } = useContext(StateContext);
+  const { setUploadedImage, setModalOpen } = useContext(StateContext);
 
   const uploadImage = async (e) => {
     const imageFile = e.target.files[0];
     console.log(imageFile);
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
+    setModalOpen(true);
     setUploadedImage(imageFile);
+    e.target.value = null;
     try {
       const options = {
         method: "POST",

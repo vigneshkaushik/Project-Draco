@@ -27,7 +27,7 @@ const SearchSection = () => {
 
   const getImages = async () => {
     setImages(null);
-    if (value === null) {
+    if (prompt === null) {
       setError("Error! Must have a search term.");
       return;
     }
