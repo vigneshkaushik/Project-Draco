@@ -15,6 +15,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage }).single("file");
+let filePath;
 
 // Function to create image
 const createImage = async (req, res) => {
@@ -42,9 +43,25 @@ const uploadImage = async (req, res) => {
     } else if (err) {
       return res.status(500).json(err);
     }
-    console.log(req.file);
+    filePath = req.file.path;
   });
 };
 
+//Function to vary image to image
+const varyImage = async (req, res) => {
+  try {
+    const image = await openai.images.createVariation({
+      image: fs.createReadStream(filePath),
+      n: 3,
+    });
+    console.log(image.data);
+  } catch (error) {
+    console.error("POST/image/vary:", error);
+    res
+      .status(400)
+      .json({ status: "Error with varyImage", message: error.message });
+  }
+};
+
 // Exporting the function
-module.exports = { createImage, uploadImage };
+module.exports = { createImage, uploadImage, varyImage };
