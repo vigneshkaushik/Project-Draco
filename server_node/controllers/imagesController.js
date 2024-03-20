@@ -14,7 +14,9 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
+
 const upload = multer({ storage: storage }).single("file");
+
 let filePath;
 
 // Function to create image
