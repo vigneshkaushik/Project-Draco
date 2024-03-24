@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 openai = "*"
 python-dotenv = "*"
+requests = "*"
+streamlit = "*"
 
 [dev-packages]
 
