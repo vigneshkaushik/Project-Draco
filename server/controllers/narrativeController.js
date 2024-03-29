@@ -3,7 +3,8 @@ const OpenAI = require("openai");
 const openai = new OpenAI(process.env.OpenAI_API_KEY);
 
 const createNarrative = async (req, res) => {
-  const { projectData, desiredOutput } = req.body;
+  const { narrativeData } = req.body;
+  const { projectData, desiredOutput } = narrativeData;
 
   const messages = [
     {

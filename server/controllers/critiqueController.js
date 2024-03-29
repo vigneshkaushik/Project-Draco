@@ -4,7 +4,9 @@ const openai = new OpenAI(process.env.OpenAI_API_KEY);
 
 // Function for image critique and similarity score
 const createCritique = async (req, res) => {
-  const { imageUrl, projectData, desiredOutput, additionalComments } = req.body;
+  const { critiqueData } = req.body;
+  const { imageUrl, projectData, desiredOutput, additionalComments } =
+    critiqueData;
 
   // Set up the messages array with an image URL and textual information
   const messages = [

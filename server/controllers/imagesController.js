@@ -5,13 +5,14 @@ const openai = new OpenAI(process.env.OpenAI_API_KEY);
 
 // Function to create image
 const createImage = async (req, res) => {
+  const { imageData } = req.body;
   const {
     basePrompt,
     imageStyle,
     architecturalStyle,
     projectData,
     additionalComments,
-  } = req.body;
+  } = imageData;
 
   // Start with the base prompt and append additional information
   let finalPrompt = basePrompt;
