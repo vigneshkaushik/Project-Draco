@@ -5,20 +5,47 @@ const openai = new OpenAI(process.env.OpenAI_API_KEY);
 
 // Function to create image
 const createImage = async (req, res) => {
+  const { imageData } = req.body;
+  const {
+    basePrompt,
+    imageStyle,
+    architecturalStyle,
+    projectData,
+    additionalComments,
+  } = imageData;
+
+  // Start with the base prompt and append additional information
+  let finalPrompt = basePrompt;
+
+  if (imageStyle) {
+    finalPrompt += ` Style: ${imageStyle}.`;
+  }
+  if (architecturalStyle) {
+    finalPrompt += ` Architectural Style: ${architecturalStyle}.`;
+  }
+  if (projectData) {
+    finalPrompt += ` Project Data: ${projectData}.`;
+  }
+  if (additionalComments) {
+    finalPrompt += ` Additional Comments: ${additionalComments}.`;
+  }
+
   try {
-    const image = await openai.images.generate({
+    const response = await openai.createImage({
       model: "dall-e-3",
-      prompt: "A cute baby sea otter",
+      prompt: finalPrompt,
+      n: 1,
+      size: "1024 x 1024",
     });
-    console.log(image.data);
-    res.send(image.data);
+    console.log(response.data);
+    res.send(response.data);
   } catch (error) {
-    console.error("POST/image/create:", error);
-    res
-      .status(400)
-      .json({ status: "Error with createImage", message: error.message });
+    res.status(500).json({
+      status: "Error with POST/image/create endpoint",
+      message: error.message,
+    });
   }
 };
 
-// Exporting the function
+// Exporting the functions
 module.exports = { createImage };
