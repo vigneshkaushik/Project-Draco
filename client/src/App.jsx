@@ -1,13 +1,23 @@
 import React, { useState } from "react";
+import Stepper from "./components/Stepper";
+import APIKeyInput from "./components/APIKeyInput";
+import CanvasAndPrompt from "./components/CanvasAndPrompt";
 import ProjectDataForm from "./components/ProjectDataForm";
-import PDFUpload from "./components/PDFUpload";
 import DesiredOutputForm from "./components/DesiredOutputForm";
-import GenerateButton from "./components/GenerateButton";
 import AdditionalComments from "./components/AdditionalComments";
+import FinalOutput from "./components/FinalOutput";
 
 export const StateContext = React.createContext();
 
 const App = () => {
+  // --- STEPPER STATES ---
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 6;
+
+  // --- INPUT STATES ---
+  const [drawingData, setDrawingData] = useState([]);
+  const [basePrompt, setBasePrompt] = useState("");
+  const [apiKey, setApiKey] = useState("");
   const [projectData, setProjectData] = useState({
     location: "",
     size: "",
@@ -20,20 +30,27 @@ const App = () => {
     architecturalStyle: "",
     interiorExterior: "",
   });
-  const [commentsVisible, setCommentsVisible] = useState(false);
   const [additionalComments, setAdditionalComments] = useState("");
 
-  const [createdImage, setCreatedImage] = useState({});
-  const [createdNarrative, setCreatedNarrative] = useState({});
-  const [createdCritique, setCreatedCritique] = useState({});
+  // --- OUTPUT STATES ---
+  const [createdImage, setCreatedImage] = useState(null);
+  const [createdNarrative, setCreatedNarrative] = useState(null);
+  const [createdCritique, setCreatedCritique] = useState(null);
 
   const state = {
+    currentStep,
+    setCurrentStep,
+    totalSteps,
+    drawingData,
+    setDrawingData,
+    basePrompt,
+    setBasePrompt,
+    apiKey,
+    setApiKey,
     projectData,
     setProjectData,
     desiredOutput,
     setDesiredOutput,
-    commentsVisible,
-    setCommentsVisible,
     additionalComments,
     setAdditionalComments,
     createdImage,
@@ -44,14 +61,30 @@ const App = () => {
     setCreatedCritique,
   };
 
+  const renderStepComponent = () => {
+    switch (currentStep) {
+      case 1:
+        return <APIKeyInput />;
+      case 2:
+        return <CanvasAndPrompt />;
+      case 3:
+        return <ProjectDataForm />;
+      case 4:
+        return <DesiredOutputForm />;
+      case 5:
+        return <AdditionalComments />;
+      case 6:
+        return <FinalOutput />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="app">
       <StateContext.Provider value={state}>
-        <ProjectDataForm />
-        <PDFUpload />
-        <DesiredOutputForm />
-        <GenerateButton />
-        <AdditionalComments />
+        <Stepper />
+        {renderStepComponent()}
       </StateContext.Provider>
     </div>
   );
