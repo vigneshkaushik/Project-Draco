@@ -4,6 +4,7 @@ import PDFUpload from "./components/PDFUpload";
 import DesiredOutputForm from "./components/DesiredOutputForm";
 import GenerateButton from "./components/GenerateButton";
 import AdditionalComments from "./components/AdditionalComments";
+import Canvas from "./components/Canvas";
 
 export const StateContext = React.createContext();
 
@@ -46,12 +47,13 @@ const App = () => {
 
   return (
     <div className="app">
-      <StateContext.Provider value={state}>
+      <StateContext.Provider value={ state }>
         <ProjectDataForm />
         <PDFUpload />
         <DesiredOutputForm />
         <GenerateButton />
         <AdditionalComments />
+        <Canvas />
       </StateContext.Provider>
     </div>
   );
