@@ -17,3 +17,214 @@ p {
   font-weight: 200;
   font-size: 14px;
 }
+
+/* Styles for forms*/
+.form-wrapper {
+  position: relative; 
+  width:50vw;
+  margin: 20px auto;
+}
+
+.form-container {
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-container h3 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box; 
+}
+
+.form-container input:focus,
+.form-container textarea:focus {
+  border-color: #90cdf4;
+  outline: none;
+}
+
+.form-container input:hover,
+.form-container textarea:hover {
+  border-color: #bee3f8;
+}
+
+.form-container textarea {
+  height: 100px;
+  resize: vertical; 
+}
+
+
+.form-container select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.form-container select:focus {
+  border-color: #90cdf4;
+  outline: none;
+}
+
+/* Styles for the radio selection */
+
+.form-container .radio-group {
+  display: flex;
+  justify-content: start !important;
+  gap: 5px; 
+  margin-bottom: 15px;
+  margin-top:15px;
+  width:30%;
+}
+
+.form-container .radio-group label {
+  margin-right: 25px; 
+}
+
+.form-container .radio-group input[type="radio"] {
+  accent-color: #90cdf4; 
+}
+
+.form-container input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.form-container input[type="file"]::file-selector-button {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.form-container input[type="file"]::file-selector-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Styles for the next and previous buttons */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  position: absolute; 
+  width: 100%; 
+  bottom: -40px; 
+}
+
+.spacer {
+  flex: 1;
+}
+
+.next-text, .previous-text {
+  font-size: 16px;
+  color: #2196F3;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+
+.next-text:hover, .previous-text:hover {
+  color: #1976D2;
+}
+
+/* Styles for the pilll button */
+
+.btn-pill {
+  padding: 10px 20px; 
+  border-radius: 50px; 
+  border: none;
+  background-color: #2196F3; 
+  color: white;
+  font-size: 16px; 
+  transition: background-color 0.3s ease;
+}
+
+.btn-pill:hover,
+.btn-pill:focus {
+  background-color: #1976D2; 
+}
+
+.btn-pill:disabled {
+  background-color: #90CAF9; 
+  color: #ffffff; 
+  cursor: not-allowed; 
+}
+
+/* Styles for the button */
+.stepper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background-color: #ddd;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #2196F3; 
+}
+
+/* Styles for the final output*/
+
+/* .output-section {
+
+} */
+
+.image-preview {
+  width: 100%;
+  padding-bottom: 56.25%; 
+  position: relative;
+  background-color: #ccc;
+  margin-bottom: 20px;
+}
+
+.image-preview img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.image-preview p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.narrative-section, .similarity-score-section {
+  margin-top: 20px;
+}
+
+
+
