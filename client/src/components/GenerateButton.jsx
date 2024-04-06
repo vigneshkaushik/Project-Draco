@@ -1,14 +1,18 @@
-import React, { useContext } from "react";
-import { StateContext } from "../App";
+import React from "react";
+import "../index.css";
 
 const GenerateButton = () => {
-  const { setCommentsVisible } = useContext(StateContext);
-
   const handleGenerate = () => {
-    setCommentsVisible(true);
+    console.log("POST REQUEST ALL THREE ENDPOINTS");
   };
 
-  return <button onClick={handleGenerate}>Generate</button>;
+  return (
+    <div className="button-container">
+      <button className="btn-pill" onClick={handleGenerate}>
+        Generate
+      </button>
+    </div>
+  );
 };
 
 export default GenerateButton;

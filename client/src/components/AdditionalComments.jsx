@@ -2,19 +2,45 @@ import React, { useContext } from "react";
 import { StateContext } from "../App";
 
 const AdditionalComments = () => {
-  const { commentsVisible, additionalComments, setAdditionalComments } =
-    useContext(StateContext);
+  const {
+    additionalComments,
+    setAdditionalComments,
+    currentStep,
+    setCurrentStep,
+  } = useContext(StateContext);
 
-  if (!commentsVisible) return null;
+  const goToNextStep = () => {
+    setCurrentStep(currentStep + 1);
+  };
+
+  const goToPreviousStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
+  const handleAdditionalCommentsChange = (e) => {
+    setAdditionalComments(e.target.value);
+  };
 
   return (
-    <div>
-      <h3>Additional Comments</h3>
-      <textarea
-        placeholder="Add any additional comments here"
-        value={additionalComments}
-        onChange={(e) => setAdditionalComments(e.target.value)}
-      />
+    <div className="form-wrapper">
+      <div className="form-container">
+        <h3>Additional Comments (Optional)</h3>
+        <textarea
+          placeholder="Add any additional comments here"
+          value={additionalComments}
+          onChange={handleAdditionalCommentsChange}
+        />
+      </div>
+      <div className="form-navigation">
+        {currentStep > 1 && (
+          <div className="previous-text" onClick={goToPreviousStep}>
+            ← Previous
+          </div>
+        )}
+        <div className="next-text" onClick={goToNextStep}>
+          Next →
+        </div>
+      </div>
     </div>
   );
 };
