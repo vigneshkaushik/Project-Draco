@@ -1,45 +1,26 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { StateContext } from "../App";
 
 const AdditionalComments = () => {
   const {
     additionalComments,
     setAdditionalComments,
-    currentStep,
-    setCurrentStep,
   } = useContext(StateContext);
-
-  const goToNextStep = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const goToPreviousStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
 
   const handleAdditionalCommentsChange = (e) => {
     setAdditionalComments(e.target.value);
   };
 
   return (
-    <div className="form-wrapper">
-      <div className="form-container">
-        <h3>Additional Comments (Optional)</h3>
+    <div className="relative w-full">
+      <div className="w-full p-3 bg-neutral-200 rounded-lg shadow-md items-center text-center flex flex-col gap-5">
+        <h3 className="font-bold text-neutral-600">3. ADDITIONAL COMMENTS</h3>
         <textarea
-          placeholder="Add any additional comments here"
-          value={additionalComments}
-          onChange={handleAdditionalCommentsChange}
+          className="w-full px-2 rounded-md"
+          placeholder="E.g. design intent and vision for the project."
+          value={ additionalComments }
+          onChange={ handleAdditionalCommentsChange }
         />
-      </div>
-      <div className="form-navigation">
-        {currentStep > 1 && (
-          <div className="previous-text" onClick={goToPreviousStep}>
-            ← Previous
-          </div>
-        )}
-        <div className="next-text" onClick={goToNextStep}>
-          Next →
-        </div>
       </div>
     </div>
   );
