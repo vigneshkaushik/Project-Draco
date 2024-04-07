@@ -122,7 +122,7 @@ export default {
         }
     ],
     appState: {
-        viewBackgroundColor: "#f6eee3",
+        viewBackgroundColor: "#ffffff",
         currentItemFontFamily: 1
     },
     scrollToContent: true,
@@ -1348,7 +1348,8 @@ export default {
                 groupIds: ["GMZ-NW9lG7c1AtfBInZ0n"],
                 strokeSharpness: "sharp",
                 boundElementIds: []
-            }
+            },
+
         ]
     ]
 };

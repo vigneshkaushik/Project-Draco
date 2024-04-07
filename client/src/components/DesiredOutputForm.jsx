@@ -1,40 +1,24 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { StateContext } from "../App";
 import "../index.css";
 
 const DesiredOutputForm = () => {
-  const { desiredOutput, setDesiredOutput, currentStep, setCurrentStep } =
+  const { desiredOutput, setDesiredOutput } =
     useContext(StateContext);
 
-  const goToNextStep = () => {
-    const isAllFieldsFilled =
-      desiredOutput.imageStyle.trim() &&
-      desiredOutput.architecturalStyle.trim() &&
-      desiredOutput.interiorExterior.trim();
-
-    if (!isAllFieldsFilled) {
-      alert("Please fill in all fields before proceeding.");
-      return; // Prevents moving to the next step
-    }
-
-    setCurrentStep(currentStep + 1);
-  };
-
-  const goToPreviousStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
 
   const handleDesiredOutputChange = (key, value) => {
     setDesiredOutput((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
-    <div className="form-wrapper">
-      <div className="form-container">
-        <h3>Desired Output</h3>
+    <div className="relative w-full">
+      <div className="w-full p-3 bg-neutral-200 rounded-lg shadow-md items-center text-center flex flex-col gap-5">
+        <h3 className="font-bold text-neutral-600">2. DESIRED OUTPUT</h3>
         <select
-          value={desiredOutput.imageStyle}
-          onChange={(e) =>
+          className="w-full text-gray-400 px-2 rounded-md"
+          value={ desiredOutput.imageStyle }
+          onChange={ (e) =>
             handleDesiredOutputChange("imageStyle", e.target.value)
           }
         >
@@ -45,8 +29,9 @@ const DesiredOutputForm = () => {
           <option value="realistic">Realistic Render</option>
         </select>
         <select
-          value={desiredOutput.architecturalStyle}
-          onChange={(e) =>
+          className="w-full  px-2 text-gray-400 rounded-md"
+          value={ desiredOutput.architecturalStyle }
+          onChange={ (e) =>
             handleDesiredOutputChange("architecturalStyle", e.target.value)
           }
         >
@@ -54,17 +39,17 @@ const DesiredOutputForm = () => {
           <option value="contemporary">Contemporary</option>
           <option value="scandinavian">Scandinavian</option>
           <option value="minimalist">Minimalist</option>
-          <option value="industrial">Industrial</option>
+          <option value="industrial">Inzdustrial</option>
           <option value="futuristic">Futuristic</option>
         </select>
-        <div className="radio-group">
+        <div className="radio-group w-full flex gap-3 text-neutral-600" >
           <input
             type="radio"
             id="interior"
             name="interiorExterior"
             value="interior"
-            checked={desiredOutput.interiorExterior === "interior"}
-            onChange={(e) =>
+            checked={ desiredOutput.interiorExterior === "interior" }
+            onChange={ (e) =>
               handleDesiredOutputChange("interiorExterior", e.target.value)
             }
           />
@@ -74,22 +59,12 @@ const DesiredOutputForm = () => {
             id="exterior"
             name="interiorExterior"
             value="exterior"
-            checked={desiredOutput.interiorExterior === "exterior"}
-            onChange={(e) =>
+            checked={ desiredOutput.interiorExterior === "exterior" }
+            onChange={ (e) =>
               handleDesiredOutputChange("interiorExterior", e.target.value)
             }
           />
           <label htmlFor="exterior">Exterior</label>
-        </div>
-      </div>
-      <div className="form-navigation">
-        {currentStep > 1 && (
-          <div className="previous-text" onClick={goToPreviousStep}>
-            ← Previous
-          </div>
-        )}
-        <div className="next-text" onClick={goToNextStep}>
-          Next →
         </div>
       </div>
     </div>
