@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // Importing controller function
-const { createCritique } = require("../controllers/critiqueController");
+import { createCritique } from "../controllers/critiqueController.js";
 
 // Creating route
 router.post("/create", createCritique);
 
 // Exporting routes
-module.exports = router;
+export default router;

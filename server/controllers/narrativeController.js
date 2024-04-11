@@ -1,8 +1,13 @@
-require("dotenv").config();
-const OpenAI = require("openai");
-const openai = new OpenAI(process.env.OpenAI_API_KEY);
+import dotenv from "dotenv";
+import { OpenAI } from "openai";
 
-const createNarrative = async (req, res) => {
+dotenv.config();
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export const createNarrative = async (req, res) => {
   const { narrativeData } = req.body;
   const { projectData, desiredOutput } = narrativeData;
 
@@ -17,10 +22,10 @@ const createNarrative = async (req, res) => {
   ];
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await openai.createChatCompletion({
       model: "gpt-4",
       messages: messages,
-      response_format: { type: "json_object" },
+      // Ensure to use valid parameters here, adjust as necessary for the API call
     });
     const narrativeJson = response.data.choices[0].message.content.trim();
 
@@ -36,6 +41,3 @@ const createNarrative = async (req, res) => {
     });
   }
 };
-
-// Exporting the function
-module.exports = { createNarrative };
