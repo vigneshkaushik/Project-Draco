@@ -1,9 +1,14 @@
-require("dotenv").config();
-const OpenAI = require("openai");
-const openai = new OpenAI(process.env.OpenAI_API_KEY);
+import dotenv from "dotenv";
+import { OpenAI } from "openai";
+
+dotenv.config();
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 // Function for image critique and similarity score
-const createCritique = async (req, res) => {
+export const createCritique = async (req, res) => {
   const { critiqueData } = req.body;
   const { imageUrl, projectData, desiredOutput, additionalComments } =
     critiqueData;
@@ -15,9 +20,8 @@ const createCritique = async (req, res) => {
       content: [
         {
           type: "text",
-          text: `Project Data: ${projectData}.  Desired Output: ${desiredOutput}. Additional Comments: ${additionalComments}.`,
+          text: `Project Data: ${projectData}. Desired Output: ${desiredOutput}. Additional Comments: ${additionalComments}.`,
         },
-
         {
           type: "image_url",
           image_url: {
@@ -34,7 +38,7 @@ const createCritique = async (req, res) => {
   ];
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await openai.createChatCompletion({
       model: "gpt-4-vision-preview",
       messages: messages,
     });
@@ -49,6 +53,3 @@ const createCritique = async (req, res) => {
     });
   }
 };
-
-// Exporting the functions
-module.exports = { createCritique };

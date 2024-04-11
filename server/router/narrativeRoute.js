@@ -1,11 +1,10 @@
-const express = require("express");
-const router = express.Router();
+import express from "express";
+import { createNarrative } from "../controllers/narrativeController.js";
 
-// Importing controller function
-const { createNarrative } = require("../controllers/narrativeController");
+const router = express.Router();
 
 // Creating route
 router.post("/create", createNarrative);
 
 // Exporting routes
-module.exports = router;
+export default router;
