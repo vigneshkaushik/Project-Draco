@@ -1,19 +1,19 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import {
-    exportToCanvas,
-    exportToSvg,
+    // exportToCanvas,
+    // exportToSvg,
     exportToBlob,
     exportToClipboard,
     Excalidraw,
     useHandleLibrary,
-    MIME_TYPES,
-    sceneCoordsToViewportCoords,
-    viewportCoordsToSceneCoords,
-    restoreElements,
-    LiveCollaborationTrigger,
-    MainMenu,
-    Footer,
-    Sidebar
+    // MIME_TYPES,
+    // sceneCoordsToViewportCoords,
+    // viewportCoordsToSceneCoords,
+    // restoreElements,
+    // LiveCollaborationTrigger,
+    // MainMenu,
+    // Footer,
+    // Sidebar
 } from "@excalidraw/excalidraw";
 
 import initialData from "../initialData";
@@ -21,11 +21,11 @@ import initialData from "../initialData";
 import { nanoid } from "nanoid";
 import {
     resolvablePromise,
-    withBatchedUpdates,
-    withBatchedUpdatesThrottled,
-    distance2d
+    // withBatchedUpdates,
+    // withBatchedUpdatesThrottled,
+    // distance2d
 } from "../utils";
-
+import { StateContext } from "../App";
 
 
 export default function Canvas() {
@@ -33,17 +33,17 @@ export default function Canvas() {
     const [gridModeEnabled, setGridModeEnabled] = useState(false);
     const [blobUrl, setBlobUrl] = useState("");
     const [canvasUrl, setCanvasUrl] = useState("");
-    const [exportWithDarkMode, setExportWithDarkMode] = useState(false);
-    const [exportEmbedScene, setExportEmbedScene] = useState(false);
     const [theme, setTheme] = useState("light");
+    // const [exportWithDarkMode, setExportWithDarkMode] = useState(false);
+    // const [exportEmbedScene, setExportEmbedScene] = useState(false);
+    // const [excalidrawAPI, setExcalidrawAPI] = useState(null);
 
-
+    const { excalidrawAPI, setExcalidrawAPI, exportWithDarkMode, exportEmbedScene } = useContext(StateContext);
     const initialStatePromiseRef = useRef({ promise: null });
     if (!initialStatePromiseRef.current.promise) {
         initialStatePromiseRef.current.promise = resolvablePromise();
     }
 
-    const [excalidrawAPI, setExcalidrawAPI] = useState(null);
 
     useHandleLibrary({ excalidrawAPI });
 
