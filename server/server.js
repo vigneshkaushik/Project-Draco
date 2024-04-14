@@ -5,9 +5,6 @@ import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 import path from "path";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 // Setting up express app
 const app = express();
 const PORT = 8000;
@@ -20,15 +17,12 @@ app.use(bodyParser.json());
 
 // Importing routes
 import imagesRoutes from "./router/imagesRoute.js";
-import narrativeRoutes from "./router/narrativeRoute.js";
-import critiqueRoutes from "./router/critiqueRoute.js";
 
 // Using routes
 app.use("/images", imagesRoutes);
-app.use("/narrative", narrativeRoutes);
-app.use("/critique", critiqueRoutes);
 
 app.use("/uploads", express.static("uploads"));
+app.use("/out", express.static("out"));
 
 // Route for testing the express app
 app.get("/", (req, res) => {

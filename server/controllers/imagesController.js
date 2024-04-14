@@ -24,7 +24,6 @@ const encodeImage = (imagePath) => {
 export const createImage = async (req, res) => {
   try {
     const {
-      basePrompt,
       architecturalStyle,
       imageStyle,
       interiorExterior,
@@ -74,22 +73,30 @@ export const createImage = async (req, res) => {
     console.log("File appended successfully");
 
     formData.append("init_image_mode", "IMAGE_STRENGTH");
-    formData.append("image_strength", 0.32);
+    formData.append("image_strength", 0.4);
 
-    formData.append("text_prompts[0][text]", basePrompt);
-    formData.append("text_prompts[0][weight]", 0.5);
+    formData.append("text_prompts[0][text]", `A ${typology} building`);
+    formData.append("text_prompts[0][weight]", 1);
 
     const prompts = [
-      { text: `Background: ${location}`, weight: 1.5 },
-      { text: `Size: ${size}`, weight: 0.5 },
-      { text: `Typology: ${typology}`, weight: 0.5 },
-      { text: `Programs: ${programs}`, weight: 0.5 },
-      { text: `Description: ${description}`, weight: 1.5 },
+      { text: `The building is located in ${location}.`, weight: 0.5 },
+      { text: `The building is approximately ${size} sqm.`, weight: 0.5 },
       {
-        text: `Architectural Style: ${architecturalStyle}`,
+        text: `The building includes the following functional areas:${programs}`,
+        weight: 0.5,
+      },
+      {
+        text: `The design can be described as follows: ${description}`,
         weight: 1.5,
       },
-      { text: `View: ${interiorExterior}`, weight: 0.5 },
+      {
+        text: `The architectural style is characterized as ${architecturalStyle}`,
+        weight: 1.5,
+      },
+      {
+        text: `It is an ${interiorExterior} view of the building.`,
+        weight: 0.5,
+      },
       {
         text: "Beautiful, realistic, well-designed, neat, architecture render",
         weight: 2,
@@ -131,7 +138,7 @@ export const createImage = async (req, res) => {
     const responseJSON = await response.json();
 
     responseJSON.artifacts.forEach((artifact, index) => {
-      const outputPath = path.join("out", `v1_img2img_${index}.png`);
+      const outputPath = path.join("out", `generatedImage_${index}.png`);
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
       fs.writeFileSync(outputPath, Buffer.from(artifact.base64, "base64"));
       console.log(`Artifact ${index} written to ${outputPath}`);
@@ -141,8 +148,11 @@ export const createImage = async (req, res) => {
     const uploadDir = path.join(__dirname, "..", "uploads");
     fs.readdirSync(uploadDir).forEach((file) => {
       const filePath = path.join(uploadDir, file);
-      fs.unlinkSync(filePath);
-      console.log("Deleted file:", filePath);
+      const fileExtension = path.extname(filePath).toLowerCase();
+      // Check if the file is an image file
+      if ([".jpg", ".jpeg", ".png"].includes(fileExtension)) {
+        fs.unlinkSync(filePath); // Delete the image file
+      }
     });
 
     res.json(responseJSON);
@@ -155,20 +165,14 @@ export const createImage = async (req, res) => {
   }
 };
 
-// Function to process the generated image
+// Function to process the generated image and create narrative
 export const readImage = async (req, res) => {
   try {
-    const {
-      architecturalStyle,
-      location,
-      typology,
-      programs,
-      description,
-      imageDescription,
-    } = req.body;
+    const { architecturalStyle, location, typology, programs, description } =
+      req.body;
 
     // Path to the generated image
-    const imageFileName = "v1_img2img_0.png";
+    const imageFileName = "generatedImage_0.png";
     const imagePath = path.join(__dirname, "..", "out", imageFileName);
 
     // Getting the base64 string of the generated image
@@ -185,10 +189,10 @@ export const readImage = async (req, res) => {
               type: "text",
               text: `Provide a description of the architecture in this image that can be used in a design proposal. 
               The architectural style is characterized as ${architecturalStyle}.
-              The project is located in ${location}.
+              The building is located in ${location}.
               The building's typology is designed as a ${typology}.
               The building includes the following functional areas: ${programs}.
-              Design Description: ${description}.
+              The design can be described as follows: ${description}.
               `,
             },
             {
@@ -202,7 +206,6 @@ export const readImage = async (req, res) => {
       ],
     });
 
-    // Send response back to the client
     res.json(response.choices[0]);
   } catch (error) {
     console.error("Error:", error);

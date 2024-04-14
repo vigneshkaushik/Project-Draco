@@ -3,10 +3,8 @@ import { StateContext } from "../App";
 import "../index.css";
 // import PDFUpload from "./PDFUpload";
 
-
 const ProjectDataForm = () => {
-  const { projectData, setProjectData } =
-    useContext(StateContext);
+  const { projectData, setProjectData } = useContext(StateContext);
 
   const handleProjectDataChange = (key, value) => {
     setProjectData((prev) => ({ ...prev, [key]: value }));
@@ -20,39 +18,39 @@ const ProjectDataForm = () => {
           className="w-full p-1 rounded-md"
           type="text"
           placeholder="Location"
-          value={ projectData.location }
-          onChange={ (e) => handleProjectDataChange("location", e.target.value) }
+          value={projectData.location}
+          onChange={(e) => handleProjectDataChange("location", e.target.value)}
         />
         <input
           className="w-full px-2 rounded-md"
           type="number"
           placeholder="Size (sqm)"
-          value={ projectData.size }
-          onChange={ (e) => handleProjectDataChange("size", e.target.value) }
+          value={projectData.size}
+          onChange={(e) => handleProjectDataChange("size", e.target.value)}
         />
         <input
           className="w-full px-2 rounded-md"
           type="text"
           placeholder="Typology"
-          value={ projectData.typology }
-          onChange={ (e) => handleProjectDataChange("typology", e.target.value) }
+          value={projectData.typology}
+          onChange={(e) => handleProjectDataChange("typology", e.target.value)}
         />
         <input
           className="w-full px-2 rounded-md"
           type="text"
           placeholder="Programs"
-          value={ projectData.programs }
-          onChange={ (e) => handleProjectDataChange("programs", e.target.value) }
+          value={projectData.programs}
+          onChange={(e) => handleProjectDataChange("programs", e.target.value)}
         />
         <textarea
           className="w-full px-2 rounded-md"
           placeholder="Brief Description"
-          value={ projectData.description }
-          onChange={ (e) =>
+          value={projectData.description}
+          onChange={(e) =>
             handleProjectDataChange("description", e.target.value)
           }
         />
-        {/* Handle PDF upload last. */ }
+        {/* Handle PDF upload last. */}
         {/* <div style={ { textAlign: "center", margin: "10px 0" } }>Or</div>
         <PDFUpload /> */}
       </div>
