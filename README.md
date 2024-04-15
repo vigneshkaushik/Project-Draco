@@ -9,7 +9,7 @@ Welcome to the Architect AI Design Tool repository on GitHub! This web applicati
 - **Interactive UI**: A sleek, user-friendly interface built using React, Vite, and Tailwind CSS.
 
 ![Sketch page](client/public/sketch.png)
-![Render page](client/public/UserHome.png)
+![Render page](client/public/render.png)
 
 ## Getting Started
 
