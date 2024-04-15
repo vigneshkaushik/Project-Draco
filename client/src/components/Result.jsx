@@ -13,15 +13,19 @@ const Result = () => {
   }, [createdNarrative]);
 
   return (
-    <div className="w-full h-5/6">
-      <h2 className="font-bold text-neutral-600">Narrative</h2>
+    <div className="w-full h-5/6 flex flex-col">
+      <h2 className="font-bold text-neutral-600 text-left w-full">Narrative</h2>
       {narrativeGeneration ? (
-        <Loader />
+        <div className="flex flex-grow items-center justify-center">
+          <Loader />
+        </div>
+      ) : createdNarrative ? (
+        <div className="overflow-auto flex flex-col flex-grow w-full mt-5">
+          <p className="text-justify w-full">{createdNarrative}</p>
+        </div>
       ) : (
-        <div className="overflow-auto w-full h-full mt-5">
-          <p className="text-justify">
-            {createdNarrative || "No narrative generated"}
-          </p>
+        <div className="flex flex-grow items-center justify-center">
+          <p className="text-center">No narrative generated</p>
         </div>
       )}
     </div>

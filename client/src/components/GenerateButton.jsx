@@ -12,11 +12,16 @@ const GenerateButton = () => {
     setCreatedNarrative,
     imageGeneration,
     narrativeGeneration,
- , excalidrawAPI, exportEmbedScene, exportWithDarkMode } = useContext(StateContext);
+    excalidrawAPI,
+    exportEmbedScene,
+    exportWithDarkMode,
+  } = useContext(StateContext);
   const { generateImageNarrative, loading, error } =
     useCreateImageNarrative("/sketchimage.jpeg");
 
   const handleGenerate = async () => {
+    const uuid = uuidv4();
+    await saveImage(uuid);
     // Set image and narrative states to null before generating new ones
     setCreatedImage(null);
     setCreatedNarrative(null);
@@ -62,10 +67,10 @@ const GenerateButton = () => {
     <div className="mt-auto self-center">
       <button
         className="px-5 py-2.5 rounded-full bg-blue-600 text-white text-base font-medium transition-colors duration-300 ease-in-out hover:bg-blue-700 focus:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:text-white"
-        onClick={ handleGenerate }
-        disabled={ imageGeneration || narrativeGeneration }
+        onClick={handleGenerate}
+        disabled={imageGeneration || narrativeGeneration}
       >
-        { mode === "sketch" ? "Generate" : "Regenerate" }
+        {mode === "sketch" ? "Generate" : "Regenerate"}
       </button>
       {error && (
         <div className="text-red-500 mt-2 text-center">Error: {error}</div>
