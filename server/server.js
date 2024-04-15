@@ -1,13 +1,15 @@
-// Importing express and other required modules
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 import path from "path";
 
+dotenv.config();
+
 // Setting up express app
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || "8000";
 
 // Middleware
 app.use(cors());
@@ -21,7 +23,7 @@ import imagesRoutes from "./router/imagesRoute.js";
 // Using routes
 app.use("/images", imagesRoutes);
 
-app.use("/uploads", express.static("uploads"));
+app.use("/inputs", express.static("inputs"));
 app.use("/out", express.static("out"));
 
 // Route for testing the express app

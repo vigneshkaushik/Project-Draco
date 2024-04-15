@@ -15,12 +15,58 @@ const openai = new OpenAI({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Environment settings, or defaulting to local development settings
+const BASE_URL = process.env.BASE_URL || "http://localhost:8000";
+
 // Function to encode the image
 const encodeImage = (imagePath) => {
   const imageData = fs.readFileSync(imagePath);
   return Buffer.from(imageData).toString("base64");
 };
 
+// Function to get the latest input image
+export const getLatestInput = async (req, res) => {
+  const inputsDirectory = path.join(__dirname, "..", "inputs");
+
+  fs.readdir(inputsDirectory, async (err, files) => {
+    if (err) {
+      res
+        .status(500)
+        .send({ message: "Failed to read directory", error: err.message });
+      return;
+    }
+
+    if (files.length === 0) {
+      res.status(404).send({ message: "No files found" });
+      return;
+    }
+
+    try {
+      // Sort files by creation time, newest first
+      files.sort((a, b) => {
+        const statA = fs
+          .statSync(path.join(inputsDirectory, a))
+          .mtime.getTime();
+        const statB = fs
+          .statSync(path.join(inputsDirectory, b))
+          .mtime.getTime();
+        return statB - statA;
+      });
+
+      // Create the full URL path
+      const latestFileUrl = `${BASE_URL}/inputs/${files[0]}`;
+
+      // Send the full URL of the newest file
+      res.status(200).send({ path: latestFileUrl });
+    } catch (error) {
+      res
+        .status(500)
+        .send({ message: "Error processing files", error: error.message });
+    }
+  });
+};
+
+//Function to generate image
 export const createImage = async (req, res) => {
   try {
     const {
@@ -142,17 +188,6 @@ export const createImage = async (req, res) => {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
       fs.writeFileSync(outputPath, Buffer.from(artifact.base64, "base64"));
       console.log(`Artifact ${index} written to ${outputPath}`);
-    });
-
-    // Clear the uploads folder after image creation
-    const uploadDir = path.join(__dirname, "..", "uploads");
-    fs.readdirSync(uploadDir).forEach((file) => {
-      const filePath = path.join(uploadDir, file);
-      const fileExtension = path.extname(filePath).toLowerCase();
-      // Check if the file is an image file
-      if ([".jpg", ".jpeg", ".png"].includes(fileExtension)) {
-        fs.unlinkSync(filePath); // Delete the image file
-      }
     });
 
     res.json(responseJSON);

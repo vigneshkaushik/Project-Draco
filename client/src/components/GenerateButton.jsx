@@ -5,6 +5,9 @@ import { useCreateImageNarrative } from "../hooks/useCreateImageNarrative";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { exportToBlob, MIME_TYPES } from "@excalidraw/excalidraw";
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:8000";
+
 const GenerateButton = () => {
   const {
     mode,
@@ -16,20 +19,17 @@ const GenerateButton = () => {
     exportEmbedScene,
     exportWithDarkMode,
   } = useContext(StateContext);
-  const { generateImageNarrative, loading, error } =
-    useCreateImageNarrative("/sketchimage.jpeg");
+  const { generateImageNarrative, loading, error } = useCreateImageNarrative();
 
   const handleGenerate = async () => {
-    const uuid = uuidv4();
-    await saveImage(uuid);
     // Set image and narrative states to null before generating new ones
     setCreatedImage(null);
     setCreatedNarrative(null);
-    // Then, proceed to generate the new image and narrative
+    await saveImage();
     await generateImageNarrative();
   };
 
-  const saveImage = async (uuid) => {
+  const saveImage = async () => {
     const blob = await exportToBlob({
       elements: excalidrawAPI?.getSceneElements(),
       mimeType: "image/jpeg",
@@ -42,13 +42,12 @@ const GenerateButton = () => {
 
     // Create a FormData object and append the blob data to it
     const formData = new FormData();
-    formData.append("uuid", uuid);
     formData.append("file", blob);
 
     try {
       // Send the FormData to your server-side endpoint
       const response = await axios.post(
-        "http://localhost:8000/images/save-image",
+        `${SERVER_URL}/images/save-image`,
         formData,
         {
           headers: {
@@ -63,8 +62,9 @@ const GenerateButton = () => {
       console.error("Error saving image:", error);
     }
   };
+
   return (
-    <div className="mt-auto self-center">
+    <div className="flex flex-col items-center justify-end w-full mt-auto">
       <button
         className="px-5 py-2.5 rounded-full bg-blue-600 text-white text-base font-medium transition-colors duration-300 ease-in-out hover:bg-blue-700 focus:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:text-white"
         onClick={handleGenerate}
@@ -73,7 +73,9 @@ const GenerateButton = () => {
         {mode === "sketch" ? "Generate" : "Regenerate"}
       </button>
       {error && (
-        <div className="text-red-500 mt-2 text-center">Error: {error}</div>
+        <div className="text-red-500 mt-2 text-center text-sm">
+          Error: {error}
+        </div>
       )}
     </div>
   );

@@ -3,7 +3,7 @@ import { StateContext } from "../App";
 import axios from "axios";
 import FormData from "form-data";
 
-export const useCreateImageNarrative = (imagePath) => {
+export const useCreateImageNarrative = () => {
   const {
     projectData, // Includes location, size, typology, programs, description
     desiredOutput, // Includes imageStyle, architecturalStyle, interiorExterior
@@ -17,18 +17,33 @@ export const useCreateImageNarrative = (imagePath) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const SERVER_URL =
+    process.env.REACT_APP_SERVER_URL || "http://localhost:8000";
+
   const generateImageNarrative = async () => {
-    if (!imagePath) {
-      setError("No image path provided");
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
+    setImageGeneration(true);
+    setNarrativeGeneration(true);
 
     try {
+      // Fetch the latest image path from the server
+      const pathResponse = await axios.get(`${SERVER_URL}/images/latest-input`);
+      console.log("Response from latest-input:", pathResponse.data); // Log the full response
+
+      if (
+        pathResponse.status !== 200 ||
+        !pathResponse.data ||
+        !pathResponse.data.path
+      ) {
+        throw new Error("Failed to fetch the latest input image path");
+      }
+      const imagePath = pathResponse.data.path;
+
       setMode("render");
       setLoading(true);
       setImageGeneration(true);
       setNarrativeGeneration(true);
+
       // Fetch the image from the URL as a blob
       const response = await axios.get(imagePath, { responseType: "blob" });
 
@@ -36,7 +51,7 @@ export const useCreateImageNarrative = (imagePath) => {
       const formData = new FormData();
 
       // Append the image file to the FormData object
-      formData.append("init_image", response.data, "sketchimage.jpeg");
+      formData.append("init_image", response.data, imagePath.split("/").pop());
       formData.append("architecturalStyle", desiredOutput.architecturalStyle);
       formData.append("imageStyle", desiredOutput.imageStyle);
       formData.append("interiorExterior", desiredOutput.interiorExterior);
@@ -46,13 +61,11 @@ export const useCreateImageNarrative = (imagePath) => {
       formData.append("programs", projectData.programs);
       formData.append("description", projectData.description);
 
-      // Perform the API call to create the image
+      // Perform the API call to create the image and narrative
       const createResponse = await axios.post(
-        "http://localhost:8000/images/create",
+        `${SERVER_URL}/images/create`,
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       // Check the createResponse and handle it
@@ -65,9 +78,7 @@ export const useCreateImageNarrative = (imagePath) => {
         );
 
         // Second API call to read the image if creation was successful
-        const readResponse = await axios.get(
-          "http://localhost:8000/images/read"
-        );
+        const readResponse = await axios.get(`${SERVER_URL}/images/read`);
 
         // Handle response
         if (
