@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { OpenAI } from "openai";
+import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
 
@@ -15,8 +16,8 @@ const openai = new OpenAI({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Environment settings, or defaulting to local development settings
-const BASE_URL = process.env.BASE_URL || "http://localhost:8000";
+// // Environment settings, or defaulting to local development settings
+// const BASE_URL = process.env.BASE_URL || "http://localhost:8000";
 
 // Function to encode the image
 const encodeImage = (imagePath) => {
@@ -24,12 +25,14 @@ const encodeImage = (imagePath) => {
   return Buffer.from(imageData).toString("base64");
 };
 
-// Function to get the latest input image
-export const getLatestInput = async (req, res) => {
-  const inputsDirectory = path.join(__dirname, "..", "inputs");
+// General function to get the latest file from a specified directory
+export const getLatestFile = async (req, res) => {
+  const folder = req.params.folder; // Get the folder from the request parameters
+  const directoryPath = path.join(__dirname, "..", folder);
 
-  fs.readdir(inputsDirectory, async (err, files) => {
+  fs.readdir(directoryPath, (err, files) => {
     if (err) {
+      console.error("Failed to read directory:", err); // Log the error for server debugging
       res
         .status(500)
         .send({ message: "Failed to read directory", error: err.message });
@@ -37,31 +40,33 @@ export const getLatestInput = async (req, res) => {
     }
 
     if (files.length === 0) {
-      res.status(404).send({ message: "No files found" });
+      res
+        .status(404)
+        .send({ message: "No files found in the specified directory" });
       return;
     }
 
     try {
-      // Sort files by creation time, newest first
+      // Sort files by modification time, newest first
       files.sort((a, b) => {
-        const statA = fs
-          .statSync(path.join(inputsDirectory, a))
-          .mtime.getTime();
-        const statB = fs
-          .statSync(path.join(inputsDirectory, b))
-          .mtime.getTime();
+        const statA = fs.statSync(path.join(directoryPath, a)).mtime.getTime();
+        const statB = fs.statSync(path.join(directoryPath, b)).mtime.getTime();
         return statB - statA;
       });
 
-      // Create the full URL path
-      const latestFileUrl = `${BASE_URL}/inputs/${files[0]}`;
+      // Create the full URL path dynamically based on request headers
+      const latestFileUrl = `${req.protocol}://${req.get("host")}/${folder}/${
+        files[0]
+      }`;
 
       // Send the full URL of the newest file
       res.status(200).send({ path: latestFileUrl });
     } catch (error) {
-      res
-        .status(500)
-        .send({ message: "Error processing files", error: error.message });
+      console.error("Error processing files:", error); // Log the error for server debugging
+      res.status(500).json({
+        status: "Error with GET /images/latest-file/:folder endpoint",
+        message: error.message,
+      });
     }
   });
 };
@@ -144,7 +149,7 @@ export const createImage = async (req, res) => {
         weight: 0.5,
       },
       {
-        text: "Beautiful, realistic, well-designed, neat, architecture render",
+        text: "Beautiful, realistic, well-designed, neat, neutral-coloured, architecture render",
         weight: 2,
       },
       {
@@ -184,8 +189,13 @@ export const createImage = async (req, res) => {
     const responseJSON = await response.json();
 
     responseJSON.artifacts.forEach((artifact, index) => {
-      const outputPath = path.join("out", `generatedImage_${index}.png`);
+      const uuid = uuidv4();
+      const timestamp = new Date().getTime();
+      const filename = `${timestamp}-${uuid}.jpeg`;
+      const outputPath = path.join("out", filename);
+      // Ensure the directory exists
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+      // Write the image file to the output path
       fs.writeFileSync(outputPath, Buffer.from(artifact.base64, "base64"));
       console.log(`Artifact ${index} written to ${outputPath}`);
     });
@@ -200,53 +210,75 @@ export const createImage = async (req, res) => {
   }
 };
 
-// Function to process the generated image and create narrative
+// Function to process the latest generated image and create narrative
 export const readImage = async (req, res) => {
-  try {
-    const { architecturalStyle, location, typology, programs, description } =
-      req.body;
+  const outputPath = path.join(__dirname, "..", "out");
 
-    // Path to the generated image
-    const imageFileName = "generatedImage_0.png";
-    const imagePath = path.join(__dirname, "..", "out", imageFileName);
+  fs.readdir(outputPath, async (err, files) => {
+    if (err) {
+      console.error("Error reading directory:", err);
+      res
+        .status(500)
+        .json({ message: "Failed to read directory", error: err.message });
+      return;
+    }
 
-    // Getting the base64 string of the generated image
-    const base64Image = encodeImage(imagePath);
+    if (files.length === 0) {
+      res.status(404).json({ message: "No files found" });
+      return;
+    }
 
-    // Send chat completion request to OpenAI
-    const response = await openai.chat.completions.create({
-      model: "gpt-4-turbo",
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: `Provide a description of the architecture in this image that can be used in a design proposal. 
-              The architectural style is characterized as ${architecturalStyle}.
-              The building is located in ${location}.
-              The building's typology is designed as a ${typology}.
-              The building includes the following functional areas: ${programs}.
-              The design can be described as follows: ${description}.
-              `,
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: `data:image/png;base64,${base64Image}`,
+    try {
+      // Sort files by modification time, newest first
+      files.sort((a, b) => {
+        const statA = fs.statSync(path.join(outputPath, a)).mtime.getTime();
+        const statB = fs.statSync(path.join(outputPath, b)).mtime.getTime();
+        return statB - statA;
+      });
+
+      const latestImageFile = files[0];
+      const imagePath = path.join(outputPath, latestImageFile);
+
+      // Encode the latest image to base64
+      const base64Image = encodeImage(imagePath);
+
+      const { architecturalStyle, location, typology, programs, description } =
+        req.body;
+
+      // Send chat completion request to OpenAI
+      const response = await openai.chat.completions.create({
+        model: "gpt-4-turbo",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: `Provide a description of the architecture in this image that can be used in a design proposal.
+                The architectural style is characterized as ${architecturalStyle}.
+                The building is located in ${location}.
+                The building's typology is designed as a ${typology}.
+                The building includes the following functional areas: ${programs}.
+                The design can be described as follows: ${description}.
+                `,
               },
-            },
-          ],
-        },
-      ],
-    });
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/png;base64,${base64Image}`,
+                },
+              },
+            ],
+          },
+        ],
+      });
 
-    res.json(response.choices[0]);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({
-      status: "Error with GET/images/read endpoint",
-      message: error.message,
-    });
-  }
+      res.json(response.choices[0]);
+    } catch (error) {
+      console.error("Error processing files:", error);
+      res
+        .status(500)
+        .json({ message: "Error processing files", error: error.message });
+    }
+  });
 };

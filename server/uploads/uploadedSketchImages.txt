@@ -1,1 +1,0 @@
-Sketched images must pass through this folder temporarily for Stability AI API to work. Do not delete the folder.
