@@ -7,9 +7,11 @@ export const useCreateImageNarrative = (imagePath) => {
   const {
     projectData, // Includes location, size, typology, programs, description
     desiredOutput, // Includes imageStyle, architecturalStyle, interiorExterior
+    setMode,
     setCreatedImage,
     setCreatedNarrative,
-    setMode,
+    setImageGeneration,
+    setNarrativeGeneration,
   } = useContext(StateContext);
 
   const [loading, setLoading] = useState(false);
@@ -21,20 +23,20 @@ export const useCreateImageNarrative = (imagePath) => {
       setLoading(false);
       return;
     }
-    setLoading(true);
-    setError(null);
 
     try {
-      // Fetch the image from the URL as a stream
+      setMode("render");
+      setLoading(true);
+      setImageGeneration(true);
+      setNarrativeGeneration(true);
+      // Fetch the image from the URL as a blob
       const response = await axios.get(imagePath, { responseType: "blob" });
-      // Convert stream data to Blob
-      const blob = new Blob([response.data]);
 
       // Create a new FormData object
       const formData = new FormData();
 
       // Append the image file to the FormData object
-      formData.append("init_image", blob, "sketchimage.jpeg");
+      formData.append("init_image", response.data, "sketchimage.jpeg");
       formData.append("architecturalStyle", desiredOutput.architecturalStyle);
       formData.append("imageStyle", desiredOutput.imageStyle);
       formData.append("interiorExterior", desiredOutput.interiorExterior);
@@ -53,14 +55,14 @@ export const useCreateImageNarrative = (imagePath) => {
         }
       );
 
-      // Handle response
-      if (createResponse.status === 200) {
-        // Store the created image info
-        setCreatedImage(true);
+      // Check the createResponse and handle it
+      if (createResponse.status === 200 && createResponse.data.artifacts) {
+        const successFailure = createResponse.data.artifacts[0].finishReason;
+        setCreatedImage(successFailure);
+        console.log(successFailure);
         console.log(
-          "Image successfully created, attempting to read narrative..."
+          "Image successfully created, attempting to create narrative..."
         );
-        setMode("render");
 
         // Second API call to read the image if creation was successful
         const readResponse = await axios.get(
@@ -90,6 +92,8 @@ export const useCreateImageNarrative = (imagePath) => {
       console.error("Error in generating image:", err);
       setError(err.message);
       setMode("sketch"); // Set mode to "sketch" if error occurs
+      setImageGeneration(false);
+      setNarrativeGeneration(false);
     } finally {
       setLoading(false); // Reset loading state
     }

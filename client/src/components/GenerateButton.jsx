@@ -4,29 +4,36 @@ import { StateContext } from "../App";
 import { useCreateImageNarrative } from "../hooks/useCreateImageNarrative";
 
 const GenerateButton = () => {
-  const { mode, setMode } = useContext(StateContext);
+  const {
+    mode,
+    setCreatedImage,
+    setCreatedNarrative,
+    imageGeneration,
+    narrativeGeneration,
+  } = useContext(StateContext);
   const { generateImageNarrative, loading, error } =
     useCreateImageNarrative("/sketchimage.jpeg");
 
-  // Use local state to track loading status
-  const [isGenerating, setIsGenerating] = useState(false);
-
   const handleGenerate = async () => {
-    setIsGenerating(true); // Set loading state to true before starting the operation
-    await generateImageNarrative(); // Call the asynchronous function
-    setIsGenerating(false); // Set loading state to false once the operation is complete
+    // Set image and narrative states to null before generating new ones
+    setCreatedImage(null);
+    setCreatedNarrative(null);
+    // Then, proceed to generate the new image and narrative
+    await generateImageNarrative();
   };
 
   return (
-    <div className="button-container flex justify-center">
+    <div className="mt-auto self-center">
       <button
-        className="btn-pill"
+        className="px-5 py-2.5 rounded-full bg-blue-600 text-white text-base font-medium transition-colors duration-300 ease-in-out hover:bg-blue-700 focus:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:text-white"
         onClick={handleGenerate}
-        disabled={isGenerating}
+        disabled={imageGeneration || narrativeGeneration}
       >
-        {mode == "sketch" ? "Generate" : "Regenerate"}
+        {mode === "sketch" ? "Generate" : "Regenerate"}
       </button>
-      {error && <p className="text-red-500">Error: {error}</p>}
+      {error && (
+        <div className="text-red-500 mt-2 text-center">Error: {error}</div>
+      )}
     </div>
   );
 };

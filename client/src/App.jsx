@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-// import Stepper from "./components/Stepper";
-// import APIKeyInput from "./components/APIKeyInput";
+
 import ProjectDataForm from "./components/ProjectDataForm";
 import DesiredOutputForm from "./components/DesiredOutputForm";
-import AdditionalComments from "./components/AdditionalComments";
 import Canvas from "./components/Canvas";
 import FinalOutput from "./components/FinalOutput";
 
@@ -19,14 +17,8 @@ const App = () => {
   const handleChangeMode = (event, currentMode) => {
     setMode(currentMode);
   };
-  // --- STEPPER STATES ---
-  const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 6;
 
   // --- INPUT STATES ---
-  const [drawingData, setDrawingData] = useState([]);
-  const [basePrompt, setBasePrompt] = useState("");
-  const [apiKey, setApiKey] = useState("");
   const [projectData, setProjectData] = useState({
     location: "",
     size: "",
@@ -39,37 +31,28 @@ const App = () => {
     architecturalStyle: "",
     interiorExterior: "",
   });
-  const [additionalComments, setAdditionalComments] = useState("");
+  const [imageGeneration, setImageGeneration] = useState(false);
+  const [narrativeGeneration, setNarrativeGeneration] = useState(false);
 
   // --- OUTPUT STATES ---
-  const [createdImage, setCreatedImage] = useState(false);
+  const [createdImage, setCreatedImage] = useState(null);
   const [createdNarrative, setCreatedNarrative] = useState(null);
-  const [createdCritique, setCreatedCritique] = useState(null);
 
   const state = {
     mode,
     setMode,
-    currentStep,
-    setCurrentStep,
-    totalSteps,
-    drawingData,
-    setDrawingData,
-    basePrompt,
-    setBasePrompt,
-    apiKey,
-    setApiKey,
     projectData,
     setProjectData,
     desiredOutput,
     setDesiredOutput,
-    additionalComments,
-    setAdditionalComments,
     createdImage,
     setCreatedImage,
     createdNarrative,
     setCreatedNarrative,
-    createdCritique,
-    setCreatedCritique,
+    imageGeneration,
+    setImageGeneration,
+    narrativeGeneration,
+    setNarrativeGeneration,
   };
   return (
     <div className="h-screen w-screen relative p-0 m-0 bg-slate-50">
@@ -92,21 +75,17 @@ const App = () => {
       <div className="p-0 mx-0 w-full h-full pt-12">
         <StateContext.Provider value={state}>
           <div className="w-full h-full flex flex-row p-0 m-0 bg-zinc-100">
-            {mode == "sketch" && (
-              <div className="flex flex-col gap-5 pt-5 px-5 basis-72">
-                <ProjectDataForm />
-                <DesiredOutputForm />
-                <AdditionalComments />
-                <GenerateButton />
-                {/* <button className="w-full bg-blue-200 p-2 rounded-md shadow-md hover:bg-blue-100" onClick={ handleGenerate }>Generate</button> */}
-              </div>
-            )}
-            {mode == "render" && (
-              <div className=" flex flex-col gap-5 pt-5 px-5 basis-72">
+            <div className="flex flex-col gap-5 py-5 pb-10 px-5 basis-72 h-full w-full">
+              {mode === "sketch" ? (
+                <>
+                  <ProjectDataForm />
+                  <DesiredOutputForm />
+                </>
+              ) : mode === "render" ? (
                 <Result />
-                <GenerateButton />
-              </div>
-            )}
+              ) : null}
+              <GenerateButton />
+            </div>
             <div className="flex-grow bg-white">
               {mode == "sketch" && <Canvas />}
               {mode == "render" && <FinalOutput />}
