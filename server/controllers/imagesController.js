@@ -16,9 +16,6 @@ const openai = new OpenAI({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// // Environment settings, or defaulting to local development settings
-// const BASE_URL = process.env.BASE_URL || "http://localhost:8000";
-
 // Function to encode the image
 const encodeImage = (imagePath) => {
   const imageData = fs.readFileSync(imagePath);
