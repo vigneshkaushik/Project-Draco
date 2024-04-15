@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { StateContext } from "../App";
 import "../index.css";
-// import PDFUpload from "./PDFUpload";
 
 const ProjectDataForm = () => {
   const { projectData, setProjectData } = useContext(StateContext);
@@ -50,9 +49,6 @@ const ProjectDataForm = () => {
             handleProjectDataChange("description", e.target.value)
           }
         />
-        {/* Handle PDF upload last. */}
-        {/* <div style={ { textAlign: "center", margin: "10px 0" } }>Or</div>
-        <PDFUpload /> */}
       </div>
     </div>
   );
