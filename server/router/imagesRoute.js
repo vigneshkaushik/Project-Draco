@@ -24,4 +24,24 @@ const upload = multer({ storage: storage });
 router.post("/create", upload.single("init_image"), createImage);
 router.get("/read", readImage);
 
+
+
+const inputStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'inputs/'); // Save files to the "public/images" folder
+  },
+  filename: function (req, file, cb) {
+    console.log('req', req.body);
+    const uuid = req.body.uuid;
+    const filename = uuid + '.jpeg';
+    cb(null, filename); // Save file as "image.jpg"
+  }
+});
+
+const uploadInput = multer({ storage: inputStorage });
+
+router.post('/save-image', uploadInput.single('file'), (req, res) => {
+  res.send('Image saved successfully');
+});
+
 export default router;

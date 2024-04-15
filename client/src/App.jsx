@@ -38,6 +38,11 @@ const App = () => {
   const [createdImage, setCreatedImage] = useState(null);
   const [createdNarrative, setCreatedNarrative] = useState(null);
 
+  // --- CANVAS ---
+  const [excalidrawAPI, setExcalidrawAPI] = useState(null);
+  const [exportWithDarkMode, setExportWithDarkMode] = useState(false);
+  const [exportEmbedScene, setExportEmbedScene] = useState(false);
+
   const state = {
     mode,
     setMode,
@@ -53,6 +58,12 @@ const App = () => {
     setImageGeneration,
     narrativeGeneration,
     setNarrativeGeneration,
+    excalidrawAPI,
+    setExcalidrawAPI,
+    exportWithDarkMode,
+    setExportWithDarkMode,
+    exportEmbedScene,
+    setExportEmbedScene,
   };
   return (
     <div className="h-screen w-screen relative p-0 m-0 bg-slate-50">
