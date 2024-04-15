@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   createImage,
   readImage,
-  getLatestInput,
+  getLatestFile,
 } from "../controllers/imagesController.js";
 
 const router = express.Router();
@@ -24,7 +24,7 @@ const inputStorage = multer.diskStorage({
 
 const uploadInput = multer({ storage: inputStorage });
 
-router.get("/latest-input", getLatestInput);
+router.get("/latest-file/:folder", getLatestFile);
 router.post("/save-image", uploadInput.single("file"), (req, res) => {
   res.send("Image saved successfully");
 });

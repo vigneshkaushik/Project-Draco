@@ -19,7 +19,7 @@ const GenerateButton = () => {
     exportEmbedScene,
     exportWithDarkMode,
   } = useContext(StateContext);
-  const { generateImageNarrative, loading, error } = useCreateImageNarrative();
+  const { generateImageNarrative, error } = useCreateImageNarrative();
 
   const handleGenerate = async () => {
     // Set image and narrative states to null before generating new ones
@@ -55,8 +55,6 @@ const GenerateButton = () => {
           },
         }
       );
-
-      // Optionally handle the response from the server
       console.log("Image saved successfully:", response.data);
     } catch (error) {
       console.error("Error saving image:", error);
