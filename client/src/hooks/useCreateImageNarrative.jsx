@@ -12,6 +12,10 @@ export const useCreateImageNarrative = () => {
     setCreatedNarrative,
     setImageGeneration,
     setNarrativeGeneration,
+    setSavedElements,
+    setSavedCanvasStates,
+    setSavedFiles,
+    excalidrawAPI
   } = useContext(StateContext);
 
   const [loading, setLoading] = useState(false);
@@ -35,7 +39,9 @@ export const useCreateImageNarrative = () => {
       }
       const imageUrl = pathResponse.data.path;
       console.log("Latest input image path:", imageUrl);
-
+      setSavedElements(excalidrawAPI?.getSceneElements());
+      setSavedCanvasStates(excalidrawAPI.getAppState());
+      setSavedFiles(excalidrawAPI?.getFiles());
       setMode("render");
       const imageResponse = await axios.get(imageUrl, { responseType: "blob" });
       const formData = new FormData();
