@@ -14,7 +14,20 @@ export const StateContext = React.createContext();
 const App = () => {
   // ---SKETCH VS RENDER STATES---
   const [mode, setMode] = useState("sketch");
+  const [savedElements, setSavedElements] = useState([]);
+  const [savedCanvasStates, setSavedCanvasStates] = useState({
+    viewBackgroundColor: "#FFFFFF",
+    currentItemFontFamily: 1
+  });
+  const [savedFiles, setSavedFiles] = useState([]);
   const handleChangeMode = (event, currentMode) => {
+    if (currentMode == "render") {
+
+
+      setSavedElements(excalidrawAPI?.getSceneElements());
+      setSavedCanvasStates(excalidrawAPI.getAppState());
+      setSavedFiles(excalidrawAPI?.getFiles());
+    }
     setMode(currentMode);
   };
 
@@ -36,7 +49,7 @@ const App = () => {
 
   // --- OUTPUT STATES ---
   const [createdImage, setCreatedImage] = useState(null);
-  const [createdNarrative, setCreatedNarrative] = useState(null);
+  const [createdNarrative, setCreatedNarrative] = useState("");
 
   // --- CANVAS ---
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
@@ -64,14 +77,20 @@ const App = () => {
     setExportWithDarkMode,
     exportEmbedScene,
     setExportEmbedScene,
+    savedElements,
+    setSavedElements,
+    savedCanvasStates,
+    setSavedCanvasStates,
+    savedFiles,
+    setSavedFiles,
   };
   return (
     <div className="h-screen w-screen relative p-0 m-0 bg-slate-50">
       <div className="w-full absolute top-0 z-10 h-auto flex justify-center py-2 bg-zinc-800">
         <ToggleButtonGroup
           className="h-8 bg-white border-1 border-white"
-          value={mode}
-          onChange={handleChangeMode}
+          value={ mode }
+          onChange={ handleChangeMode }
           exclusive
           aria-label="mode"
         >
@@ -84,22 +103,22 @@ const App = () => {
         </ToggleButtonGroup>
       </div>
       <div className="p-0 mx-0 w-full h-full pt-12">
-        <StateContext.Provider value={state}>
+        <StateContext.Provider value={ state }>
           <div className="w-full h-full flex flex-row p-0 m-0 bg-zinc-100">
-            <div className="flex flex-col gap-5 py-5 pb-10 px-5 basis-72 h-full w-full">
-              {mode === "sketch" ? (
+            <div className="flex flex-col gap-5 py-3 pb-10 px-3 basis-72 h-full w-full">
+              { mode === "sketch" ? (
                 <>
                   <ProjectDataForm />
                   <DesiredOutputForm />
                 </>
               ) : mode === "render" ? (
                 <Result />
-              ) : null}
+              ) : null }
               <GenerateButton />
             </div>
             <div className="flex-grow bg-white">
-              {mode == "sketch" && <Canvas />}
-              {mode == "render" && <FinalOutput />}
+              { mode == "sketch" && <Canvas /> }
+              { mode == "render" && <FinalOutput /> }
             </div>
           </div>
         </StateContext.Provider>

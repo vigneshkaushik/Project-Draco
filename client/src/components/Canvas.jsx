@@ -6,24 +6,11 @@ import {
     exportToClipboard,
     Excalidraw,
     useHandleLibrary,
-    // MIME_TYPES,
-    // sceneCoordsToViewportCoords,
-    // viewportCoordsToSceneCoords,
-    // restoreElements,
-    // LiveCollaborationTrigger,
-    // MainMenu,
-    // Footer,
-    // Sidebar
 } from "@excalidraw/excalidraw";
 
-import initialData from "../initialData";
 
-import { nanoid } from "nanoid";
 import {
     resolvablePromise,
-    // withBatchedUpdates,
-    // withBatchedUpdatesThrottled,
-    // distance2d
 } from "../utils";
 import { StateContext } from "../App";
 
@@ -31,14 +18,10 @@ import { StateContext } from "../App";
 export default function Canvas() {
     const appRef = useRef(null);
     const [gridModeEnabled, setGridModeEnabled] = useState(false);
-    const [blobUrl, setBlobUrl] = useState("");
-    const [canvasUrl, setCanvasUrl] = useState("");
     const [theme, setTheme] = useState("light");
-    // const [exportWithDarkMode, setExportWithDarkMode] = useState(false);
-    // const [exportEmbedScene, setExportEmbedScene] = useState(false);
-    // const [excalidrawAPI, setExcalidrawAPI] = useState(null);
+    const [savedData, setSavedData] = useState();
 
-    const { excalidrawAPI, setExcalidrawAPI, exportWithDarkMode, exportEmbedScene } = useContext(StateContext);
+    const { excalidrawAPI, setExcalidrawAPI, exportWithDarkMode, exportEmbedScene, savedCanvasStates, savedElements, savedFiles } = useContext(StateContext);
     const initialStatePromiseRef = useRef({ promise: null });
     if (!initialStatePromiseRef.current.promise) {
         initialStatePromiseRef.current.promise = resolvablePromise();
@@ -51,14 +34,11 @@ export default function Canvas() {
         if (!excalidrawAPI) {
             return;
         }
-        const fetchData = async () => {
-            const reader = new FileReader();
-            reader.onload = function () {
-                //@ts-ignore
-                initialStatePromiseRef.current.promise.resolve(initialData);
-            };
-        };
-        fetchData();
+        setSavedData({
+            elements: savedElements,
+            appState: savedCanvasStates,
+            files: savedFiles
+        });
     }, [excalidrawAPI]);
 
     const renderTopRightUI = () => {
@@ -93,17 +73,27 @@ export default function Canvas() {
                             elements: excalidrawAPI?.getSceneElements(),
                             mimeType: "image/jpeg",
                             appState: {
-                                ...initialData.appState,
+                                ...savedCanvasStates,
                                 exportEmbedScene,
-                                exportWithDarkMode
+                                exportWithDarkMode,
                             },
                             files: excalidrawAPI?.getFiles()
                         });
-                        setBlobUrl(window.URL.createObjectURL(blob));
+                        // Create a temporary anchor element
+                        const a = document.createElement('a');
+                        a.href = window.URL.createObjectURL(blob);
+                        a.download = 'canvas_export.jpeg'; // Set the filename here
+
+                        // Simulate a click on the anchor element to trigger download
+                        a.click();
+
+                        // Clean up
+                        window.URL.revokeObjectURL(a.href);
+
                     } }
                 >
                     Export
-                </button>
+                </button >
             </>
 
         );
@@ -128,26 +118,13 @@ export default function Canvas() {
 
     return (
         <div className="w-full h-full border-0" ref={ appRef }>
-            {/* <div className="button-wrapper">
-                <div>
-                    <button onClick={ onCopy.bind(null, "png") }>
-                        Copy to Clipboard as PNG
-                    </button>
-                    <button onClick={ onCopy.bind(null, "svg") }>
-                        Copy to Clipboard as SVG
-                    </button>
-                    <button onClick={ onCopy.bind(null, "json") }>
-                        Copy to Clipboard as JSON
-                    </button>
-                </div>
-            </div> */}
-
             <div className="w-full h-full">
                 <Excalidraw
                     excalidrawAPI={ (api) => {
                         setExcalidrawAPI(api);
                     } }
                     gridModeEnabled={ gridModeEnabled }
+                    initialData={ savedData }
                     theme={ theme }
                     name="Custom name of drawing"
                     UIOptions={ {
@@ -157,72 +134,6 @@ export default function Canvas() {
                 >
                 </Excalidraw>
             </div>
-
-            {/* <div className="export-wrapper button-wrapper">
-                    <label className="export-wrapper__checkbox">
-                        <input
-                            type="checkbox"
-                            checked={ exportWithDarkMode }
-                            onChange={ () => setExportWithDarkMode(!exportWithDarkMode) }
-                        />
-                        Export with dark mode
-                    </label>
-                    <label className="export-wrapper__checkbox">
-                        <input
-                            type="checkbox"
-                            checked={ exportEmbedScene }
-                            onChange={ () => setExportEmbedScene(!exportEmbedScene) }
-                        />
-                        Export with embed scene
-                    </label>
-                    <button
-                        onClick={ async () => {
-                            if (!excalidrawAPI) {
-                                return;
-                            }
-                            const svg = await exportToSvg({
-                                elements: excalidrawAPI?.getSceneElements(),
-                                appState: {
-                                    ...initialData.appState,
-                                    exportWithDarkMode,
-                                    exportEmbedScene,
-                                    width: 300,
-                                    height: 100
-                                },
-                                files: excalidrawAPI?.getFiles()
-                            });
-                            appRef.current.querySelector(".export-svg").innerHTML =
-                                svg.outerHTML;
-                        } }
-                    >
-                        Export to SVG
-                    </button>
-                    <div className="export export-svg"></div>
-
-                    <button
-                        onClick={ async () => {
-                            if (!excalidrawAPI) {
-                                return;
-                            }
-                            const blob = await exportToBlob({
-                                elements: excalidrawAPI?.getSceneElements(),
-                                mimeType: "image/jpeg",
-                                appState: {
-                                    ...initialData.appState,
-                                    exportEmbedScene,
-                                    exportWithDarkMode
-                                },
-                                files: excalidrawAPI?.getFiles()
-                            });
-                            setBlobUrl(window.URL.createObjectURL(blob));
-                        } }
-                    >
-                        Export to Blob
-                    </button>
-                    <div className="export export-blob">
-                        <img src={ blobUrl } alt="" />
-                    </div>
-                </div> */}
         </div>
     );
 }

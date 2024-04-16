@@ -52,9 +52,8 @@ export const getLatestFile = async (req, res) => {
       });
 
       // Create the full URL path dynamically based on request headers
-      const latestFileUrl = `${req.protocol}://${req.get("host")}/${folder}/${
-        files[0]
-      }`;
+      const latestFileUrl = `${req.protocol}://${req.get("host")}/${folder}/${files[0]
+        }`;
 
       // Send the full URL of the newest file
       res.status(200).send({ path: latestFileUrl });
@@ -257,6 +256,7 @@ export const readImage = async (req, res) => {
                 The building's typology is designed as a ${typology}.
                 The building includes the following functional areas: ${programs}.
                 The design can be described as follows: ${description}.
+                Mark the section headers using ** at the start and beginning. Here is an example: **Architectural Style**
                 `,
               },
               {
