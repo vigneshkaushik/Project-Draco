@@ -56,7 +56,7 @@ export default function Canvas() {
                     </p>
                 </label>
                 <button
-                    className="reset-scene text-xs my-0 h-10 p-[10px] rounded-lg border-2 border-white box-border bg-blue-200 text-slate-700 hover:bg-blue-100"
+                    className="reset-scene text-xs my-0 h-10 p-[10px] rounded-lg border-2 border-white box-border bg-violet-200 text-slate-700 hover:bg-violet-100"
                     onClick={ () => {
                         excalidrawAPI?.resetScene();
                     } }
@@ -64,7 +64,7 @@ export default function Canvas() {
                     Reset
                 </button >
                 <button
-                    className="text-xs my-0 h-10 p-[10px] rounded-lg border-2 border-white box-border bg-blue-200 text-slate-700 hover:bg-blue-100 w-fit-content"
+                    className="text-xs my-0 h-10 p-[10px] rounded-lg border-2 border-white box-border bg-violet-200 text-slate-700 hover:bg-violet-100 w-fit-content"
                     onClick={ async () => {
                         if (!excalidrawAPI) {
                             return;

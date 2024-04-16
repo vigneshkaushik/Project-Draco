@@ -11,12 +11,12 @@ const DesiredOutputForm = () => {
 
   return (
     <div className="relative w-full">
-      <div className="w-full p-3 bg-neutral-200 rounded-lg shadow-md items-center text-center flex flex-col gap-5">
-        <h3 className="font-bold text-neutral-600">2. DESIRED OUTPUT</h3>
+      <div className="w-full p-3 rounded-lg shadow-md items-center text-center flex flex-col gap-5" style={ { backgroundImage: "linear-gradient(to top, #3f87a6, #ebf8e1" } }>
+        <h3 className="font-bold text-zinc-700">2. DESIRED OUTPUT</h3>
         <select
-          className="w-full text-gray-400 px-2 rounded-md"
-          value={desiredOutput.imageStyle}
-          onChange={(e) =>
+          className="w-full text-gray-600 px-2 rounded-md"
+          value={ desiredOutput.imageStyle }
+          onChange={ (e) =>
             handleDesiredOutputChange("imageStyle", e.target.value)
           }
         >
@@ -30,9 +30,9 @@ const DesiredOutputForm = () => {
           <option value="photographic">Photographic</option>
         </select>
         <select
-          className="w-full  px-2 text-gray-400 rounded-md"
-          value={desiredOutput.architecturalStyle}
-          onChange={(e) =>
+          className="w-full  px-2 text-gray-600 rounded-md"
+          value={ desiredOutput.architecturalStyle }
+          onChange={ (e) =>
             handleDesiredOutputChange("architecturalStyle", e.target.value)
           }
         >
@@ -43,14 +43,14 @@ const DesiredOutputForm = () => {
           <option value="industrial">Industrial</option>
           <option value="futuristic">Futuristic</option>
         </select>
-        <div className="radio-group w-full flex gap-3 text-neutral-600">
+        <div className="radio-group w-full flex gap-3 text-gray-800">
           <input
             type="radio"
             id="interior"
             name="interiorExterior"
             value="interior"
-            checked={desiredOutput.interiorExterior === "interior"}
-            onChange={(e) =>
+            checked={ desiredOutput.interiorExterior === "interior" }
+            onChange={ (e) =>
               handleDesiredOutputChange("interiorExterior", e.target.value)
             }
           />
@@ -60,8 +60,8 @@ const DesiredOutputForm = () => {
             id="exterior"
             name="interiorExterior"
             value="exterior"
-            checked={desiredOutput.interiorExterior === "exterior"}
-            onChange={(e) =>
+            checked={ desiredOutput.interiorExterior === "exterior" }
+            onChange={ (e) =>
               handleDesiredOutputChange("interiorExterior", e.target.value)
             }
           />

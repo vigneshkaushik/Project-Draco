@@ -86,26 +86,34 @@ const App = () => {
   };
   return (
     <div className="h-screen w-screen relative p-0 m-0 bg-slate-50">
-      <div className="w-full absolute top-0 z-10 h-auto flex justify-center py-2 bg-zinc-800">
-        <ToggleButtonGroup
-          className="h-8 bg-white border-1 border-white"
-          value={ mode }
-          onChange={ handleChangeMode }
-          exclusive
-          aria-label="mode"
-        >
-          <ToggleButton value="sketch" aria-label="sketch" color="primary">
-            <p className="font-bold">Sketch</p>
-          </ToggleButton>
-          <ToggleButton value="render" aria-label="render" color="primary">
-            <p className="font-bold">Render</p>
-          </ToggleButton>
-        </ToggleButtonGroup>
+      <div className="w-full absolute top-0 z-10 h-auto flex py-2 bg-zinc-800">
+        <div className="px-5 flex items-center gap-3">
+          <img src="/images/draco-icon.png" alt="" width="40" height="40" />
+          <h1 className="text-2xl font-semibold text-white">Draco</h1>
+        </div>
+        <div className="flex justify-center w-full items-center">
+          <ToggleButtonGroup
+            className="h-8 bg-white border-1 border-white"
+            value={ mode }
+            onChange={ handleChangeMode }
+            exclusive
+            aria-label="mode"
+          >
+            <ToggleButton value="sketch" aria-label="sketch" color="secondary">
+              <p className="font-bold">Sketch</p>
+            </ToggleButton>
+            <ToggleButton value="render" aria-label="render" color="secondary">
+              <p className="font-bold">Render</p>
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
       </div>
       <div className="p-0 mx-0 w-full h-full pt-12">
         <StateContext.Provider value={ state }>
-          <div className="w-full h-full flex flex-row p-0 m-0 bg-zinc-100">
-            <div className="flex flex-col gap-5 py-3 pb-10 px-3 basis-72 h-full w-full">
+          <div className="w-full h-full flex flex-row p-0 m-0" style={ {
+            backgroundImage: "linear-gradient(to top, #1F0013, #003E61,#003E61, #1AF2CB)"
+          } }>
+            <div className="flex flex-col gap-5 py-3 pb-6 px-3 basis-72 h-full w-full">
               { mode === "sketch" ? (
                 <>
                   <ProjectDataForm />
