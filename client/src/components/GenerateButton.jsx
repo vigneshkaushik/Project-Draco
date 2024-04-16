@@ -64,17 +64,17 @@ const GenerateButton = () => {
   return (
     <div className="flex flex-col items-center justify-end w-full mt-auto">
       <button
-        className="px-5 py-2.5 rounded-full bg-blue-600 text-white text-base font-medium transition-colors duration-300 ease-in-out hover:bg-blue-700 focus:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:text-white"
-        onClick={handleGenerate}
-        disabled={imageGeneration || narrativeGeneration}
+        className="px-5 py-2.5 rounded-full bg-fuchsia-600 text-white text-base font-medium transition-colors duration-300 ease-in-out hover:bg-fuchsia-700 focus:bg-fuchsia-700 disabled:bg-fuchsia-300 disabled:cursor-not-allowed disabled:text-white"
+        onClick={ handleGenerate }
+        disabled={ imageGeneration || narrativeGeneration }
       >
-        {mode === "sketch" ? "Generate" : "Regenerate"}
+        { mode === "sketch" ? "Generate" : "Regenerate" }
       </button>
-      {error && (
+      { error && (
         <div className="text-red-500 mt-2 text-center text-sm">
-          Error: {error}
+          Error: { error }
         </div>
-      )}
+      ) }
     </div>
   );
 };

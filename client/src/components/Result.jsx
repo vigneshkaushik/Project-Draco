@@ -36,8 +36,8 @@ const ParsedTextRenderer = ({ parsedText }) => {
     <div>
       { parsedText.map((item, index) => (
         <div key={ index } className="overflow-auto">
-          { item.header && <h3 className="font-bold text-neutral-600 text-left w-full py-2">{ item.header }</h3> }
-          <p>{ item.content }</p>
+          { item.header && <h3 className="font-bold text-fuchsia-600 text-left w-full py-2">{ item.header }</h3> }
+          <p className="text-white">{ item.content }</p>
         </div>
       )) }
     </div>
@@ -58,8 +58,8 @@ const Result = () => {
   }, [createdNarrative]);
 
   return (
-    <div className="w-full h-full flex flex-col overflow-auto">
-      <h1 className="font-bold text-neutral-600 text-left w-full text-xl">Narrative</h1>
+    <div className="w-full h-full flex flex-col overflow-auto bg-black bg-opacity-60 p-4 pt-2 mt-1">
+      <h1 className="font-bold  text-left w-full text-xl text-white">Narrative</h1>
       { narrativeGeneration ? (
         <div className="flex flex-grow items-center justify-center">
           <Loader />
@@ -68,7 +68,7 @@ const Result = () => {
         <ParsedTextRenderer parsedText={ parsedText } />
       ) : (
         <div className="flex flex-grow items-center justify-center">
-          <p className="text-center">No narrative generated</p>
+          <p className="text-center text-white">No narrative generated</p>
         </div>
       ) }
     </div>
