@@ -9,6 +9,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Result from "./components/Result";
 import GenerateButton from "./components/GenerateButton";
+import LoadSamples from "./components/LoadSamples";
 export const StateContext = React.createContext();
 
 const App = () => {
@@ -22,8 +23,6 @@ const App = () => {
   const [savedFiles, setSavedFiles] = useState([]);
   const handleChangeMode = (event, currentMode) => {
     if (currentMode == "render") {
-
-
       setSavedElements(excalidrawAPI?.getSceneElements());
       setSavedCanvasStates(excalidrawAPI.getAppState());
       setSavedFiles(excalidrawAPI?.getFiles());
@@ -118,6 +117,7 @@ const App = () => {
                 <>
                   <ProjectDataForm />
                   <DesiredOutputForm />
+                  <LoadSamples />
                 </>
               ) : mode === "render" ? (
                 <Result />
