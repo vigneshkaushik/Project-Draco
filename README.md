@@ -1,10 +1,10 @@
-# Draco - Sketching & Collaging to AI Render tool
+# Draco AI - Sketching & Collaging to Render tool
 
-Welcome to Project Draco repository on GitHub! This web application is designed by architects for architects, aiming to enhance design ideation through technology. Users can sketch their visions, input project parameters, and receive AI-generated narratives and visual renderings for their design proposals.
+Welcome to Draco AI repository on GitHub! This web application is designed by architects for architects, aiming to enhance design ideation through technology. Users can sketch their visions, input project parameters, and receive AI-generated narratives and visual renderings for their design proposals.
 
 We strongly believe that using sketches and collages with AI models enables a human-driven AI design process where architects/designers drive the design ideas instead of constantly clicking the "Generate" button and praying that something amazing comes out.
 
-Draco is developed as a tool-agnostic, web-based real-time sketching/collaging tool, that allows architects/designers to add their sketches, or use their digital pen to sketch on the canvas, add images from across the web to collage - and then see their design intent render in any style of their preference in a matter of seconds! Then we leverage AI to create a good text description of the design outcome based on the generated render and the initial client’s brief. This workflow can save days, if not weeks, going by the current industry workflow of ideation to sketches to 3d models to final render.
+Draco AI is developed as a tool-agnostic, web-based real-time sketching/collaging tool, that allows architects/designers to add their sketches, or use their digital pen to sketch on the canvas, add images from across the web to collage - and then see their design intent render in any style of their preference in a matter of seconds! Then we leverage AI to create a good text description of the design outcome based on the generated render and the initial client’s brief. This workflow can save days, if not weeks, going by the current industry workflow of ideation to sketches to 3d models to final render.
 
 
 ## Features
